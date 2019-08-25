@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/locationgif"
+                android:layout_width="wrap_content"
+                android:layout_height="190dp"
+                app:lottie_autoPlay="true"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                app:lottie_loop="true"
+                app:lottie_fileName="mylocation.json"/>
+
+        <LinearLayout
+                android:id="@+id/locationData"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/locationgif"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:layout_gravity="center"
+                    android:id="@+id/text1"
+                    android:layout_below="@+id/locationgif"
+                    android:textSize="20dp"
+                    android:textColor="#ffa700"
+                    android:fontFamily="@font/seguisb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hey, looks like you are in "/>
+
+            <TextView
+                    android:id="@+id/streetName"
+                    android:layout_gravity="center"
+                    android:textColor="#2e4661"
+                    android:textSize="18dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:fontFamily="@font/seguisb"
+                    android:text="Finding Location..."
+                    android:layout_marginTop="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/cityName"
+                    android:layout_gravity="center"
+                    android:textColor="#2e4661"
+                    android:textSize="18dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:fontFamily="@font/seguisb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/linerLayout1"
+                android:weightSum="2"
+                android:orientation="horizontal"
+                android:layout_below="@+id/locationData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cardMyTarget"
+                    android:layout_weight="1"
+                    app:cardElevation="10dp"
+                    android:layout_margin="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:padding="15dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                            android:contentDescription="TODO" android:src="@drawable/ic_mytarget"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:textAlignment="center"
+                            android:textSize="16dp"
+                            android:fontFamily="@font/seguisb"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="My Target"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cardAppointment"
+                    android:layout_weight="1"
+                    android:layout_margin="15dp"
+                    app:cardElevation="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:padding="15dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                            android:contentDescription="TODO" android:src="@drawable/ic_appointment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:textAlignment="center"
+                            android:textSize="16dp"
+                            android:fontFamily="@font/seguisb"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Appointment"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/linerLayout2"
+                android:weightSum="2"
+                android:orientation="horizontal"
+                android:layout_below="@+id/linerLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cardSalesPlanner"
+                    android:layout_weight="1"
+                    app:cardElevation="10dp"
+                    android:layout_margin="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:padding="15dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                            android:contentDescription="TODO" android:src="@drawable/ic_callplaner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:textAlignment="center"
+                            android:textSize="16dp"
+                            android:fontFamily="@font/seguisb"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sales Planner"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cardSalesCall"
+                    android:layout_weight="1"
+                    app:cardElevation="10dp"
+                    android:layout_margin="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:padding="15dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                            android:contentDescription="TODO" android:src="@drawable/ic_salescall"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:textAlignment="center"
+                            android:textSize="16dp"
+                            android:fontFamily="@font/seguisb"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sales Call"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+        </LinearLayout>
+
+        <!-- <Button
+                 android:layout_marginBottom="16dp"
+                 android:layout_alignParentBottom="true"
+                 android:id="@+id/loginBtn"
+                 android:layout_width="match_parent"
+                 android:layout_height="40dp"
+                 android:layout_marginTop="60dp"
+                 android:background="@drawable/button_bg"
+                 android:text="See Location"
+                 android:textAllCaps="false"
+                 android:textColor="#fff"
+                 android:textSize="20sp"/>-->
+
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>
+

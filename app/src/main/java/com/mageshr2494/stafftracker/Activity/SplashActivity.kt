@@ -6,17 +6,17 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.mageshr2494.stafftracker.R
-import com.mageshr2494.stafftracker.Utils
+import com.mageshr2494.stafftracker.utils.SharedPreference
 
 class SplashActivity : AppCompatActivity() {
 
-    lateinit var utils: Utils
+    lateinit var utils: SharedPreference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        utils = Utils(applicationContext)
+        utils = SharedPreference(applicationContext)
 
         Handler().postDelayed({
 

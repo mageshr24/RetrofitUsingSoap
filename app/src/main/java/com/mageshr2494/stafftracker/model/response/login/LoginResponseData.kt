@@ -57,6 +57,9 @@ data class LoginResponseData constructor(
     @field:Element(name = "CmpTypeID", required = false)
     var CmpTypeID: String? = null,
 
+    @field:Element(name = "Success", required = false)
+    var Success: String? = null,
+
     @field:Element(name = "CargoTypeID", required = false)
     var CargoTypeID: String? = null,
 

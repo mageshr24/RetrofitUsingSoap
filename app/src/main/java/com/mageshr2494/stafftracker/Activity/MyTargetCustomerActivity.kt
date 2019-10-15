@@ -10,10 +10,9 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.mageshr2494.stafftracker.Api.UtilsApi
 import com.mageshr2494.stafftracker.R
-import com.mageshr2494.stafftracker.Utils
+import com.mageshr2494.stafftracker.utils.SharedPreference
 import com.mageshr2494.stafftracker.model.response.locationTracking.MyTargetEnvelope
 import kotlinx.android.synthetic.main.activity_my_target_customer.*
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -21,14 +20,14 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MyTargetCustomerActivity : AppCompatActivity() {
-    lateinit var utils: Utils
+    lateinit var utils: SharedPreference
     var userId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_target_customer)
 
-        utils = Utils(applicationContext)
+        utils = SharedPreference(applicationContext)
         userId = utils.getUserId()
 
         //actionbar

@@ -3,9 +3,11 @@ package com.mageshr2494.stafftracker
 import android.app.Service
 import android.app.job.JobParameters
 import android.app.job.JobService
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.location.Location
+import android.net.ConnectivityManager
 import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
@@ -14,6 +16,8 @@ import android.util.Log
 import com.mageshr2494.stafftracker.Api.UtilsApi
 import com.mageshr2494.stafftracker.Activity.MainActivity.messageKey.MESSENGER_INTENT_KEY
 import com.mageshr2494.stafftracker.model.response.locationTracking.LocationTrackEnvelope
+import com.mageshr2494.stafftracker.utils.ConnectivityReceiver
+import com.mageshr2494.stafftracker.utils.SharedPreference
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -22,7 +26,7 @@ import retrofit2.Response
 
 class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationProvider {
 
-    lateinit var utils: Utils
+    lateinit var utils: SharedPreference
     private var mActivityMessenger: Messenger? = null
     var userId: Int = 0
 
@@ -42,7 +46,7 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
 
     override fun onCreate() {
 
-        utils = Utils(applicationContext)
+        utils = SharedPreference(applicationContext)
 
         userId = utils.getUserId()
         Log.i(TAG, "created...............")
@@ -136,7 +140,10 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
         val response = UtilsApi.getAPIService()?.locationTrack(requestBody)
 
         response?.enqueue(object : Callback<LocationTrackEnvelope> {
-            override fun onResponse(call: Call<LocationTrackEnvelope>, response: Response<LocationTrackEnvelope>) {
+            override fun onResponse(
+                call: Call<LocationTrackEnvelope>,
+                response: Response<LocationTrackEnvelope>
+            ) {
                 val responseEnvelope = response.body()
 
                 if (responseEnvelope != null) {
@@ -158,8 +165,21 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
         location?.let { sendMessage(LOCATION_MESSAGE, it) }
 
         if (userId != 0) {
-            sendLocationDetails(location!!.latitude, location!!.longitude)
+
+            if (isConnectedOrConnecting(this)) {
+
+                Log.v("isconnection", "true")
+                sendLocationDetails(location!!.latitude, location!!.longitude)
+            } else {
+                Log.v("isconnection", "false")
+            }
         }
+    }
+
+    fun isConnectedOrConnecting(context: Context): Boolean {
+        val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connMgr.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnectedOrConnecting
     }
 
     companion object {

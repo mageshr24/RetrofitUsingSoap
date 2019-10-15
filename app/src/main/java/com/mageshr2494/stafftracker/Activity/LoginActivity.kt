@@ -6,10 +6,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.mageshr2494.stafftracker.Api.UtilsApi
-import com.mageshr2494.stafftracker.Utils
+import com.mageshr2494.stafftracker.utils.SharedPreference
 import com.mageshr2494.stafftracker.model.response.login.LoginResponseEnvelope
 import kotlinx.android.synthetic.main.activity_login.*
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -18,19 +17,18 @@ import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
-    lateinit var utils : Utils
+    lateinit var utils: SharedPreference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.mageshr2494.stafftracker.R.layout.activity_login)
 
         //Clear Previous data
-        utils = Utils(applicationContext)
+        utils = SharedPreference(applicationContext)
         utils.clearAllPrefs()
 
         loginBtn.setOnClickListener {
-            if(validate())
-            {
+            if (validate()) {
                 loginProcess(userName.text.toString(), password.text.toString())
             }
         }
@@ -38,7 +36,11 @@ class LoginActivity : AppCompatActivity() {
 
     private fun validate(): Boolean {
         if (userName.text.isEmpty() || password.text.isEmpty()) {
-            Toast.makeText(applicationContext, "Username or the password is empty", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                applicationContext,
+                "Username or the password is empty",
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         }
         return true
@@ -63,27 +65,36 @@ class LoginActivity : AppCompatActivity() {
         val response = UtilsApi.getAPIService()?.getUserDetails(requestBody)
 
         response?.enqueue(object : Callback<LoginResponseEnvelope> {
-            override fun onResponse(call: Call<LoginResponseEnvelope>, response: Response<LoginResponseEnvelope>) {
+            override fun onResponse(
+                call: Call<LoginResponseEnvelope>,
+                response: Response<LoginResponseEnvelope>
+            ) {
                 val responseEnvelope = response.body()
 
                 if (responseEnvelope != null) {
                     val userData = responseEnvelope.body?.getUserResponse?.result?.FFDTypes
 
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    intent.putExtra("UserID", "" + (userData?.UserID))
-                    startActivity(intent)
+                    if (userData?.Success == "True") {
 
-                    //Store userid to sharedpreference
-                    userData?.UserID?.let { utils.setUserId(it) }
+                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        intent.putExtra("UserID", "" + (userData?.UserID))
+                        startActivity(intent)
 
-                    Toast.makeText(applicationContext, "Login Success", Toast.LENGTH_SHORT).show()
-                    finish()
+                        //Store userid to sharedpreference
+                        userData?.UserID?.let { utils.setUserId(it) }
+
+                        Toast.makeText(applicationContext, "Login Success", Toast.LENGTH_SHORT).show()
+                        finish()
+
+                    } else {
+                        Toast.makeText(applicationContext, "Login Failed", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
             override fun onFailure(call: Call<LoginResponseEnvelope>, t: Throwable) {
                 Log.e("onFailure", t.message)
-
+                Toast.makeText(applicationContext, "Try again later", Toast.LENGTH_SHORT).show()
             }
 
         })

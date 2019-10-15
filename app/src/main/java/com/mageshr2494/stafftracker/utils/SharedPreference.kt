@@ -1,10 +1,11 @@
-package com.mageshr2494.stafftracker
+package com.mageshr2494.stafftracker.utils
 
 import android.content.Context
+import com.mageshr2494.stafftracker.Constant
 import com.mageshr2494.stafftracker.Constant.TRACK_PREFERENCE
 import com.mageshr2494.stafftracker.Constant.USER_ID
 
-class Utils(val context: Context) {
+class SharedPreference(val context: Context) {
 
     val sharedPreferences = context.getSharedPreferences(TRACK_PREFERENCE, Context.MODE_PRIVATE)
 

@@ -9,27 +9,10 @@ import com.google.android.gms.location.*
 class LocationUpdatesComponent(var iLocationProvider: ILocationProvider?) {
 
     private var mLocationRequest: LocationRequest? = null
-
-    /**
-     * Provides access to the Fused Location Provider API.
-     */
     private var mFusedLocationClient: FusedLocationProviderClient? = null
-
-    /**
-     * Callback for changes in location.
-     */
     private var mLocationCallback: LocationCallback? = null
-
-    /**
-     * The current location.
-     */
     private var mLocation: Location? = null
 
-    /**
-     * create first time to initialize the location components
-     *
-     * @param context
-     */
     fun onCreate(context: Context) {
         Log.i(TAG, "created...............")
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
@@ -42,33 +25,20 @@ class LocationUpdatesComponent(var iLocationProvider: ILocationProvider?) {
                 onNewLocation(locationResult.lastLocation)
             }
         }
-        // create location request
         createLocationRequest()
-        // get last known location
         getLastLocation()
     }
 
-    /**
-     * start location updates
-     */
     fun onStart() {
         Log.i(TAG, "onStart ")
-        //hey request for location updates
         requestLocationUpdates()
     }
 
-    /**
-     * remove location updates
-     */
     fun onStop() {
         Log.i(TAG, "onStop....")
         removeLocationUpdates()
     }
 
-    /**
-     * Makes a request for location updates. Note that in this sample we merely log the
-     * [SecurityException].
-     */
     fun requestLocationUpdates() {
         Log.i(TAG, "Requesting location updates")
         try {
@@ -79,21 +49,15 @@ class LocationUpdatesComponent(var iLocationProvider: ILocationProvider?) {
         } catch (unlikely: SecurityException) {
             Log.e(TAG, "Lost location permission. Could not request updates. $unlikely")
         }
-
     }
 
-    /**
-     * Removes location updates. Note that in this sample we merely log the
-     * [SecurityException].
-     */
     fun removeLocationUpdates() {
         Log.i(TAG, "Removing location updates")
         try {
             mFusedLocationClient!!.removeLocationUpdates(mLocationCallback!!)
-            //            Utils.setRequestingLocationUpdates(this, false);
-            //            stopSelf();
+
         } catch (unlikely: SecurityException) {
-            //            Utils.setRequestingLocationUpdates(this, true);
+
             Log.e(TAG, "Lost location permission. Could not remove updates. $unlikely")
         }
     }
@@ -122,7 +86,6 @@ class LocationUpdatesComponent(var iLocationProvider: ILocationProvider?) {
 
     private fun onNewLocation(location: Location?) {
         Log.i(TAG, "New location: " + location!!)
-        //        Toast.makeText(getApplicationContext(), "onNewLocation " + location, Toast.LENGTH_LONG).show();
 
         mLocation = location
         if (this.iLocationProvider != null) {
@@ -130,9 +93,6 @@ class LocationUpdatesComponent(var iLocationProvider: ILocationProvider?) {
         }
     }
 
-    /**
-     * Sets the location request parameters.
-     */
     private fun createLocationRequest() {
         mLocationRequest = LocationRequest()
         mLocationRequest!!.interval = UPDATE_INTERVAL_IN_MILLISECONDS
@@ -140,26 +100,13 @@ class LocationUpdatesComponent(var iLocationProvider: ILocationProvider?) {
         mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
-    /**
-     * implements this interface to get call back of location changes
-     */
     interface ILocationProvider {
         fun onLocationUpdate(location: Location?)
     }
 
     companion object {
-
         private val TAG = "LocationupdateNew"
-
-        /**
-         * The desired interval for location updates. Inexact. Updates may be more or less frequent.
-         */
-        private val UPDATE_INTERVAL_IN_MILLISECONDS = (1 * 60000).toLong()
-
-        /**
-         * The fastest rate for active location updates. Updates will never be more frequent
-         * than this value.
-         */
+        private val UPDATE_INTERVAL_IN_MILLISECONDS = (1 * 60000/3).toLong()
         private val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2
     }
 }

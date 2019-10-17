@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "915121674047",
+    "firebase_url": "https://stafftracker-ab968.firebaseio.com",
+    "project_id": "stafftracker-ab968",
+    "storage_bucket": "stafftracker-ab968.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915121674047:android:4ec8ee8b6e38403a01658a",
+        "android_client_info": {
+          "package_name": "com.mageshr2494.stafftracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915121674047-d6nmd1hasp3hjg6jlt852qbnv4hfdos4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBil5pUUO512gW9ClDRvtb7ypFG3_hclIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915121674047-d6nmd1hasp3hjg6jlt852qbnv4hfdos4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

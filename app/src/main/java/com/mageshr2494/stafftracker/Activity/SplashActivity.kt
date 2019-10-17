@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.crashlytics.android.Crashlytics
 import com.mageshr2494.stafftracker.R
 import com.mageshr2494.stafftracker.utils.SharedPreference
+import io.fabric.sdk.android.Fabric
 
 class SplashActivity : AppCompatActivity() {
 
@@ -15,6 +17,9 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
+        //Firebase-crashlytics
+        Fabric.with(this, Crashlytics())
 
         utils = SharedPreference(applicationContext)
 

@@ -8,10 +8,12 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 import com.mageshr2494.stafftracker.Api.UtilsApi
 import com.mageshr2494.stafftracker.R
 import com.mageshr2494.stafftracker.utils.SharedPreference
 import com.mageshr2494.stafftracker.model.response.locationTracking.MyTargetEnvelope
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_my_target_customer.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -26,6 +28,9 @@ class MyTargetCustomerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_target_customer)
+
+        //Firebase-crashlytics
+        Fabric.with(this, Crashlytics())
 
         utils = SharedPreference(applicationContext)
         userId = utils.getUserId()

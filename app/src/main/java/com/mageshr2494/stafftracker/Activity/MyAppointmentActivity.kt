@@ -8,10 +8,12 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 import com.mageshr2494.stafftracker.Api.UtilsApi
 import com.mageshr2494.stafftracker.R
 import com.mageshr2494.stafftracker.utils.SharedPreference
 import com.mageshr2494.stafftracker.model.response.locationTracking.MyAppointmentEnvelope
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_my_appointment.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -28,6 +30,9 @@ class MyAppointmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_appointment)
+
+        //Firebase-crashlytics
+        Fabric.with(this, Crashlytics())
 
         utils = SharedPreference(applicationContext)
         userId = utils.getUserId()

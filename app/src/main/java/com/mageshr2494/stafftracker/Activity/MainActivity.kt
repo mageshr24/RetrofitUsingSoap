@@ -21,6 +21,8 @@ import java.util.*
 import android.location.Geocoder
 import com.mageshr2494.stafftracker.LocationUpdatesService
 import com.mageshr2494.stafftracker.R
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,6 +39,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //Firebase-crashlytics
+        Fabric.with(this, Crashlytics())
 
         overridePendingTransition(
             R.anim.slide_enter_left,
@@ -56,6 +61,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         cardMyTarget.setOnClickListener {
+
+
+//            Crashlytics.getInstance().crash(); // Force a crash
+
             var intent = Intent(this, MyTargetCustomerActivity::class.java)
             startActivity(intent)
         }
@@ -71,7 +80,6 @@ class MainActivity : AppCompatActivity() {
             var intent = Intent(this, SalesCallActivity::class.java)
             startActivity(intent)
         }
-
     }
 
     private fun checkPermissions() =

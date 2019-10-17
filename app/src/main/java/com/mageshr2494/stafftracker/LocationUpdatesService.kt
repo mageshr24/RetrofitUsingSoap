@@ -63,7 +63,6 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
             mActivityMessenger = intent.getParcelableExtra(MESSENGER_INTENT_KEY)
         }
 
-        //hey request for location updates
         locationUpdatesComponent!!.onStart()
 
         return Service.START_STICKY
@@ -74,9 +73,6 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
     }
 
     override fun onRebind(intent: Intent) {
-        // Called when a client (MainActivity in case of this sample) returns to the foreground
-        // and binds once again with this service. The service should cease to be a foreground
-        // service when that happens.
         Log.i(TAG, "in onRebind()")
         super.onRebind(intent)
     }
@@ -97,8 +93,7 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
      * @param messageID
      */
     private fun sendMessage(messageID: Int, location: Location) {
-        // If this service is launched by the JobScheduler, there's no callback Messenger. It
-        // only exists when the MainActivity calls startService() with the callback in the Intent.
+
         if (mActivityMessenger == null) {
             Log.d(TAG, "Service is bound, not started. There's no callback to send a message to.")
             return
@@ -110,10 +105,6 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
         try {
             mActivityMessenger!!.send(m)
             Log.v("UserId", "" + userId)
-
-            /*if (userId != 0) {
-                sendLocationDetails(location.latitude, location.longitude)
-            }*/
 
         } catch (e: RemoteException) {
             Log.e(TAG, "Error passing service object back to activity.")
@@ -162,6 +153,8 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
     }
 
     override fun onLocationUpdate(location: Location?) {
+        Log.v("onLocationUpdate", ""+location)
+
         location?.let { sendMessage(LOCATION_MESSAGE, it) }
 
         if (userId != 0) {

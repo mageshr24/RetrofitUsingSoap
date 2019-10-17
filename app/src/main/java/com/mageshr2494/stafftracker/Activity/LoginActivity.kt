@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.crashlytics.android.Crashlytics
 import com.mageshr2494.stafftracker.Api.UtilsApi
 import com.mageshr2494.stafftracker.utils.SharedPreference
 import com.mageshr2494.stafftracker.model.response.login.LoginResponseEnvelope
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -22,6 +24,9 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.mageshr2494.stafftracker.R.layout.activity_login)
+
+        //Firebase-crashlytics
+        Fabric.with(this, Crashlytics())
 
         //Clear Previous data
         utils = SharedPreference(applicationContext)

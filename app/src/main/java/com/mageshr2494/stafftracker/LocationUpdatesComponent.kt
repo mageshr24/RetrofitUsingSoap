@@ -72,7 +72,7 @@ class LocationUpdatesComponent(var iLocationProvider: ILocationProvider?) {
                     if (task.isSuccessful && task.result != null) {
                         mLocation = task.result
                         Log.i(TAG, "getLastLocation " + mLocation!!)
-                        //                                Toast.makeText(getApplicationContext(), "" + mLocation, Toast.LENGTH_SHORT).show();
+
                         onNewLocation(mLocation)
                     } else {
                         Log.w(TAG, "Failed to get location.")
@@ -81,7 +81,6 @@ class LocationUpdatesComponent(var iLocationProvider: ILocationProvider?) {
         } catch (unlikely: SecurityException) {
             Log.e(TAG, "Lost location permission.$unlikely")
         }
-
     }
 
     private fun onNewLocation(location: Location?) {

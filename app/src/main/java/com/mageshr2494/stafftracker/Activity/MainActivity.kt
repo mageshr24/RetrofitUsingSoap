@@ -8,10 +8,6 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.Address
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
-import android.os.Messenger
 import androidx.core.app.ActivityCompat
 import android.util.Log
 
@@ -23,6 +19,12 @@ import com.mageshr2494.stafftracker.LocationUpdatesService
 import com.mageshr2494.stafftracker.R
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
+import android.app.ActivityManager
+import android.content.Context
+import android.os.*
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import com.mageshr2494.stafftracker.service.ForegroundService
 
 class MainActivity : AppCompatActivity() {
 
@@ -63,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         cardMyTarget.setOnClickListener {
 
 
-//            Crashlytics.getInstance().crash(); // Force a crash
+            //            Crashlytics.getInstance().crash(); // Force a crash
 
             var intent = Intent(this, MyTargetCustomerActivity::class.java)
             startActivity(intent)
@@ -85,11 +87,32 @@ class MainActivity : AppCompatActivity() {
     private fun checkPermissions() =
         ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
 
+
     private fun mainFunction() {
-        val startServiceIntent = Intent(this, LocationUpdatesService::class.java)
+        val startServiceIntent = Intent(this, ForegroundService::class.java)
         val messengerIncoming = Messenger(mHandler)
+        startServiceIntent.putExtra("message",  "StaffTracker Service is running...")
         startServiceIntent.putExtra(MESSENGER_INTENT_KEY, messengerIncoming)
-        startService(startServiceIntent)
+        ContextCompat.startForegroundService(this, startServiceIntent)
+
+//        ForegroundService.startService(this, "StaffTracker Service is running...")
+
+    }
+
+    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+
+        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+
+            if (serviceClass.name == service.service.className) {
+                Log.i("isMyServiceRunning?", true.toString() + "")
+                return true
+            }
+        }
+
+        Log.i("isMyServiceRunning?", false.toString() + "")
+        return false
     }
 
     private fun requestPermission() {
@@ -101,7 +124,9 @@ class MainActivity : AppCompatActivity() {
 
         } else {
             ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSIONS_REQUEST_CODE
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_PERMISSIONS_REQUEST_CODE
             )
         }
     }

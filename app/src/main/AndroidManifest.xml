@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" android:protectionLevel="signature"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
             android:allowBackup="true"
@@ -87,6 +88,9 @@
                 android:name=".LocationUpdatesService"
                 android:label="My Job Service Update "
                 android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <service android:name=".service.ForegroundService">
+        </service>
 
     </application>
 

@@ -16,7 +16,6 @@ import android.util.Log
 import com.mageshr2494.stafftracker.Api.UtilsApi
 import com.mageshr2494.stafftracker.Activity.MainActivity.messageKey.MESSENGER_INTENT_KEY
 import com.mageshr2494.stafftracker.model.response.locationTracking.LocationTrackEnvelope
-import com.mageshr2494.stafftracker.utils.ConnectivityReceiver
 import com.mageshr2494.stafftracker.utils.SharedPreference
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -30,19 +29,12 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
     private var mActivityMessenger: Messenger? = null
     var userId: Int = 0
 
+    companion object {
+        private val TAG = "BackgroundService"
+        val LOCATION_MESSAGE = 9999
+    }
+
     private var locationUpdatesComponent: LocationUpdatesComponent? = null
-
-    override fun onStartJob(params: JobParameters): Boolean {
-        Log.i(TAG, "onStartJob....")
-        return true
-    }
-
-    override fun onStopJob(params: JobParameters): Boolean {
-        Log.i(TAG, "onStopJob....")
-        locationUpdatesComponent!!.onStop()
-
-        return false
-    }
 
     override fun onCreate() {
 
@@ -65,33 +57,25 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
 
         locationUpdatesComponent!!.onStart()
 
-        return Service.START_STICKY
+        return Service.START_REDELIVER_INTENT
+    }
+
+    override fun onStartJob(params: JobParameters): Boolean {
+        Log.i(TAG, "onStartJob....")
+        return true
+    }
+
+    override fun onStopJob(params: JobParameters): Boolean {
+        Log.i(TAG, "onStopJob....")
+        locationUpdatesComponent!!.onStop()
+
+        return false
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
     }
 
-    override fun onRebind(intent: Intent) {
-        Log.i(TAG, "in onRebind()")
-        super.onRebind(intent)
-    }
-
-    override fun onUnbind(intent: Intent): Boolean {
-        Log.i(TAG, "Last client unbound from service")
-
-        return true // Ensures onRebind() is called when a client re-binds.
-    }
-
-    override fun onDestroy() {
-        Log.i(TAG, "onDestroy....")
-    }
-
-    /**
-     * send message by using messenger
-     *
-     * @param messageID
-     */
     private fun sendMessage(messageID: Int, location: Location) {
 
         if (mActivityMessenger == null) {
@@ -152,6 +136,23 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
         })
     }
 
+    fun isConnectedOrConnecting(context: Context): Boolean {
+        val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connMgr.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnectedOrConnecting
+    }
+
+    override fun onRebind(intent: Intent) {
+        Log.i(TAG, "in onRebind()")
+        super.onRebind(intent)
+    }
+
+    override fun onUnbind(intent: Intent): Boolean {
+        Log.i(TAG, "Last client unbound from service")
+
+        return true // Ensures onRebind() is called when a client re-binds.
+    }
+
     override fun onLocationUpdate(location: Location?) {
         Log.v("onLocationUpdate", ""+location)
 
@@ -169,14 +170,9 @@ class LocationUpdatesService : JobService(), LocationUpdatesComponent.ILocationP
         }
     }
 
-    fun isConnectedOrConnecting(context: Context): Boolean {
-        val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connMgr.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnectedOrConnecting
-    }
-
-    companion object {
-        private val TAG = "BackgroundService"
-        val LOCATION_MESSAGE = 9999
+    override fun onDestroy() {
+        Log.i(TAG, "onDestroy....")
+        val broadcastIntent = Intent("ac.in.ActivityRecognition.RestartSensor")
+        sendBroadcast(broadcastIntent)
     }
 }

@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     private fun mainFunction() {
         val startServiceIntent = Intent(this, ForegroundService::class.java)
         val messengerIncoming = Messenger(mHandler)
-        startServiceIntent.putExtra("message",  "StaffTracker Service is running...")
+        startServiceIntent.putExtra("message",  "StaffTracker app is running...")
         startServiceIntent.putExtra(MESSENGER_INTENT_KEY, messengerIncoming)
         ContextCompat.startForegroundService(this, startServiceIntent)
 
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
             super.handleMessage(msg)
 
             when (msg.what) {
-                LocationUpdatesService.LOCATION_MESSAGE -> {
+                ForegroundService.LOCATION_MESSAGE -> {
                     val obj = msg.obj as Location
 
                     geocoder = Geocoder(applicationContext, Locale.getDefault())

@@ -17,6 +17,8 @@ import com.mageshr2494.stafftracker.Activity.MainActivity.messageKey.MESSENGER_I
 import com.mageshr2494.stafftracker.Api.UtilsApi
 import com.mageshr2494.stafftracker.LocationUpdatesComponent
 import com.mageshr2494.stafftracker.R
+import com.mageshr2494.stafftracker.db.LatLongReq
+import com.mageshr2494.stafftracker.db.SqlLiteDBHelper
 import com.mageshr2494.stafftracker.model.response.locationTracking.LocationTrackEnvelope
 import com.mageshr2494.stafftracker.utils.SharedPreference
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -30,10 +32,14 @@ class ForegroundService : Service(), LocationUpdatesComponent.ILocationProvider 
     lateinit var utils: SharedPreference
     private var mActivityMessenger: Messenger? = null
     var userId: Int = 0
-    val LOCATION_MESSAGE = 9999
+    companion object {
+        val LOCATION_MESSAGE = 9999
+    }
 
     private var locationUpdatesComponent: LocationUpdatesComponent? = null
     var Tag: String = "ForegroundService"
+
+    val sqlLiteDBHelper: SqlLiteDBHelper = SqlLiteDBHelper(this)
 
     override fun onLocationUpdate(location: Location?) {
         Log.v(Tag, "" + location)
@@ -42,13 +48,31 @@ class ForegroundService : Service(), LocationUpdatesComponent.ILocationProvider 
 
         if (userId != 0) {
 
+            val datalist: List<LatLongReq> = sqlLiteDBHelper.getData()
+
             if (isConnectedOrConnecting(this)) {
 
-                Log.v("isconnection", "true")
-//                sendLocationDetails(location!!.latitude, location!!.longitude)
+                sendLocationDetails(location!!.latitude, location!!.longitude)
+
+                if(!datalist.equals(null))
+                {
+                    sendDbData(datalist)
+                }
+
             } else {
-                Log.v("isconnection", "false")
+
+                sqlLiteDBHelper.addLatLong(location!!.latitude, location!!.longitude)
+
+                Log.v("isconnection", "data - " + datalist[0].latitude)
             }
+        }
+    }
+
+    private fun sendDbData(datalist: List<LatLongReq>) {
+
+        for(data in datalist){
+
+            sendLocationDetails(data!!.latitude, data!!.longitude)
         }
     }
 
@@ -98,9 +122,22 @@ class ForegroundService : Service(), LocationUpdatesComponent.ILocationProvider 
         return null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        Log.i("EXIT", "ondestroy!")
+
+        val broadcastIntent = Intent("ac.in.ActivityRecognition.RestartSensor")
+        sendBroadcast(broadcastIntent)
+    }
+
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val serviceChannel = NotificationChannel(CHANNEL_ID, "Foreground Service Channel", NotificationManager.IMPORTANCE_DEFAULT )
+            val serviceChannel = NotificationChannel(
+                CHANNEL_ID,
+                "Foreground Service Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
             val manager = getSystemService(NotificationManager::class.java)
             manager!!.createNotificationChannel(serviceChannel)
         }
@@ -112,6 +149,13 @@ class ForegroundService : Service(), LocationUpdatesComponent.ILocationProvider 
             Log.d(Tag, "Service is bound, not started. There's no callback to send a message to.")
             return
         }
+
+        if (!isConnectedOrConnecting(this)) {
+
+            Log.d(Tag, "Connection issue. Service is bound, not started. There's no callback to send a message to.")
+            return
+        }
+
         val m = Message.obtain()
         m.what = messageID
         m.obj = location
@@ -167,10 +211,8 @@ class ForegroundService : Service(), LocationUpdatesComponent.ILocationProvider 
             }
 
             override fun onFailure(call: Call<LocationTrackEnvelope>, t: Throwable) {
-                Log.e("onFailure", t.message)
+                Log.e("onFailure", "" + t)
             }
         })
     }
-
-
 }

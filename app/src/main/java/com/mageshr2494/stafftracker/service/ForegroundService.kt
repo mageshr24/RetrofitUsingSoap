@@ -32,6 +32,7 @@ class ForegroundService : Service(), LocationUpdatesComponent.ILocationProvider 
     lateinit var utils: SharedPreference
     private var mActivityMessenger: Messenger? = null
     var userId: Int = 0
+
     companion object {
         val LOCATION_MESSAGE = 9999
     }
@@ -54,8 +55,11 @@ class ForegroundService : Service(), LocationUpdatesComponent.ILocationProvider 
 
                 sendLocationDetails(location!!.latitude, location!!.longitude)
 
-                if(!datalist.equals(null))
-                {
+                Log.v("isconnection", "datavalue - " + datalist)
+
+                if (datalist.size > 0) {
+
+                    Log.v("isconnection", "datavalue1 - " + datalist)
                     sendDbData(datalist)
                 }
 
@@ -63,15 +67,18 @@ class ForegroundService : Service(), LocationUpdatesComponent.ILocationProvider 
 
                 sqlLiteDBHelper.addLatLong(location!!.latitude, location!!.longitude)
 
-                Log.v("isconnection", "data - " + datalist[0].latitude)
+                if (datalist.size > 0) {
+                    Log.v("isconnection", "data - " + datalist[0].latitude)
+                }
             }
         }
     }
 
     private fun sendDbData(datalist: List<LatLongReq>) {
 
-        for(data in datalist){
+        for (data in datalist) {
 
+            sqlLiteDBHelper.deleteData(data)
             sendLocationDetails(data!!.latitude, data!!.longitude)
         }
     }
@@ -152,7 +159,10 @@ class ForegroundService : Service(), LocationUpdatesComponent.ILocationProvider 
 
         if (!isConnectedOrConnecting(this)) {
 
-            Log.d(Tag, "Connection issue. Service is bound, not started. There's no callback to send a message to.")
+            Log.d(
+                Tag,
+                "Connection issue. Service is bound, not started. There's no callback to send a message to."
+            )
             return
         }
 

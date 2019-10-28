@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     private fun mainFunction() {
         val startServiceIntent = Intent(this, ForegroundService::class.java)
         val messengerIncoming = Messenger(mHandler)
-        startServiceIntent.putExtra("message",  "StaffTracker app is running...")
+        startServiceIntent.putExtra("message", "StaffTracker app is running...")
         startServiceIntent.putExtra(MESSENGER_INTENT_KEY, messengerIncoming)
         ContextCompat.startForegroundService(this, startServiceIntent)
 
@@ -163,20 +163,22 @@ class MainActivity : AppCompatActivity() {
 
                     geocoder = Geocoder(applicationContext, Locale.getDefault())
 
-                    addresses = geocoder!!.getFromLocation(
-                        obj.latitude,
-                        obj.longitude,
-                        1
-                    )
-                    Log.i("locationDetails", "" + addresses)
+                    try {
+                        addresses = geocoder!!.getFromLocation(
+                            obj.latitude,
+                            obj.longitude,
+                            1
+                        )
 
-//                    val address = addresses!!.get(0).getAddressLine(0)
+                        val thoroughfare = addresses!!.get(0).thoroughfare
+                        val city = addresses!!.get(0).locality
 
-                    val thoroughfare = addresses!!.get(0).thoroughfare
-                    val city = addresses!!.get(0).locality
+                        streetName.setText("" + thoroughfare)
+                        cityName.setText("" + city)
 
-                    streetName.setText("" + thoroughfare)
-                    cityName.setText("" + city)
+                    } catch (e: Exception) {
+
+                    }
                 }
             }
         }
